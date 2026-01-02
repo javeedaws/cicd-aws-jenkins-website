@@ -2,30 +2,22 @@ pipeline {
     agent any
 
     environment {
-        REPO_URL  = 'https://github.com/javeedaws/cicd-aws-jenkins-website.git'
-        BRANCH    = 'awsproject'
+        REPO_URL = 'https://github.com/javeedaws/cicd-aws-jenkins-website.git'
+        BRANCH = 'awsproject'
         DEPLOY_DIR = '/var/www/html'
     }
 
     stages {
-
         stage('Pull Code from GitHub') {
             steps {
                 git branch: "${BRANCH}", url: "${REPO_URL}"
             }
         }
 
-        stage('Prepare Deployment Directory') {
+        stage('Deploy to Apache') {
             steps {
                 sh '''
-                sudo rm -rf ${DEPLOY_DIR}/*
-                '''
-            }
-        }
-
-        stage('Deploy Website') {
-            steps {
-                sh '''
+                sudo rm -rf /var/www/html/*
                 sudo cp -r * ${DEPLOY_DIR}/
                 '''
             }
@@ -43,10 +35,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Deployment successful!'
+            echo 'Deployment successful 🎉'
         }
         failure {
-            echo '❌ Deployment failed!'
+            echo 'Deployment failed ❌'
         }
     }
 }
